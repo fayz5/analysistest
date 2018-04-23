@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Render bollinger bands and update chart
         updateChart(chart, bollinger.sma, `${PERIOD}-period SMA`);
-        updateChart(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'orange');
-        updateChart(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'purple');
+        updateChart(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'lime');
+        updateChart(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'red');
 
         // Calculate and render RSI
-        const rsi = getRSIData(data, PERIOD);
-        renderChart('RSISTL', rsi, 'RSI STL', 'aquamarine');
+        const rsi = getRSIData(data);
+        renderChart('RSISTL', rsi, 'RSI(14) STL', 'green');
     });
     getData('data/Stockholm_ABB.json').then((res) => {
         const data = processData(res.data);
@@ -30,11 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const bollinger = getBollingerData(data, PERIOD);
         // Render bollinger bands and update chart
         updateChart(chart, bollinger.sma, `${PERIOD}-period SMA`);
-        updateChart(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'orange');
-        updateChart(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'purple');
+        updateChart(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'lime');
+        updateChart(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'red');
 
         // Calculate and render RSI
-        const rsi = getRSIData(data, PERIOD);
-        renderChart('RSIABB', rsi, 'RSI ABB', 'aquamarine');
+        const rsi = getRSIData(data);
+        renderChart('RSIABB', rsi, 'RSI(14) ABB', 'green');
     });
 });

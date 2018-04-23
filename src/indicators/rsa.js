@@ -1,11 +1,12 @@
 export default (data = [], period = 14) => {
+    if (data.length <= period) return null;
+
     let sumGain = 0;
     let sumLoss = 0;
     let averageGain;
     let averageLoss;
     const rsi = [];
 
-    if (data.length < period) return [];
     for (let i = 1; i <= period; i++) {
         const diff = data[i].y - data[i - 1].y;
         const gain = diff >= 0 ? diff : 0;
@@ -26,7 +27,7 @@ export default (data = [], period = 14) => {
         const diff = data[i].y - data[i - 1].y;
         const gain = diff >= 0 ? diff : 0;
         const loss = diff < 0 ? 0 - diff : 0;
-
+        // average = (prevAverage * )
         averageGain = (averageGain * (period - 1) + gain) / period;
         averageLoss = (averageLoss * (period - 1) + loss) / period;
 

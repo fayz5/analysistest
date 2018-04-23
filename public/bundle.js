@@ -34090,7 +34090,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const PERIOD = 14;
+const PERIOD = 20;
 
 document.addEventListener('DOMContentLoaded', () => {
     Object(_utils_getData__WEBPACK_IMPORTED_MODULE_0__["default"])('data/Oslo_STL.json').then((res) => {
@@ -34124,6 +34124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
 /***/ }),
 
 /***/ "./src/indicators/boilinger.js":
@@ -34136,78 +34137,73 @@ document.addEventListener('DOMContentLoaded', () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ((data = [], period = 20) => {
-    // Default period is 20
-    if (data.length > period) {
-        let periodSum = 0; // sum of {period} samples
-        let squaredSum = 0; // squared sum of samples
-        const sma = []; // date vs MA array for the given {period}
-        const upperBand = [];
-        const lowerBand = [];
-        for (let i = 0; i < period; i++) {
-            periodSum += data[i].y;
-            squaredSum += data[i].y * data[i].y;
-        }
-        /* Simgple Moving Average(SMA) and Standard deviation(sigma) is available
-                only starting from date where there are enough samples to calculate it */
+    if (data.length < period) return null;
 
-        sma.push({
-            x: data[period - 1].x,
-            y: periodSum / period // E(X)
-        });
+    let periodSum = 0; // sum of {period} samples
+    let squaredSum = 0; // squared sum of samples
+    const sma = []; // date vs MA array for the given {period}
+    const upperBand = [];
+    const lowerBand = [];
 
-        upperBand.push({
-            x: data[period - 1].x,
-            y:
-                periodSum / period +
-                2 *
-                    Math.sqrt(
-                        squaredSum / period -
-                            periodSum / period * (periodSum / period)
-                    ) // sigma = sqrt(E(X^2)-E(x)^2)
-        });
-        lowerBand.push({
-            x: data[period - 1].x,
-            y:
-                periodSum / period -
-                2 *
-                    Math.sqrt(
-                        squaredSum / period -
-                            periodSum / period * (periodSum / period)
-                    ) // sigma = sqrt(E(X^2)-E(x)^2)
-        });
-
-        for (let i = period; i < data.length; i++) {
-            periodSum = periodSum - data[i - period].y + data[i].y; // Update period sum for current date
-            squaredSum =
-                squaredSum -
-                data[i - period].y * data[i - period].y +
-                data[i].y * data[i].y; // Update squared sum for current date
-            const mju = periodSum / period;
-            const stdev = Math.sqrt(squaredSum / period - mju * mju); // sigma = sqrt(E(X^2)-E(x)^2)
-            // push current SMA
-            sma.push({
-                x: data[i].x,
-                y: periodSum / period
-            });
-            // Push current value of SMA + STDEV * 2
-            upperBand.push({
-                x: data[i].x,
-                y: periodSum / period + 2 * stdev
-            });
-            // Push current value of SMA - STDEV * 2
-            lowerBand.push({
-                x: data[i].x,
-                y: periodSum / period - 2 * stdev
-            });
-        }
-
-        return {
-            sma,
-            upperBand,
-            lowerBand
-        };
+    for (let i = 0; i < period; i++) {
+        periodSum += data[i].y;
+        squaredSum += data[i].y * data[i].y;
     }
-    return null;
+
+    /* Simple Moving Average(SMA) and Standard deviation(sigma) is available
+           only starting from date where there are enough samples to calculate it
+        */
+
+    sma.push({
+        x: data[period - 1].x,
+        y: periodSum / period // E(X)
+    });
+
+    // Standard deviation
+    const sigma = Math.sqrt(
+        squaredSum / period - periodSum / period * (periodSum / period) // sigma = sqrt(E(X^2)-E(X)^2)
+    );
+
+    upperBand.push({
+        x: data[period - 1].x,
+        y: periodSum / period + 2 * sigma
+    });
+
+    lowerBand.push({
+        x: data[period - 1].x,
+        y: periodSum / period - 2 * sigma
+    });
+
+    for (let i = period; i < data.length; i++) {
+        periodSum = periodSum - data[i - period].y + data[i].y; // Update period sum for current date
+        squaredSum =
+            squaredSum -
+            data[i - period].y * data[i - period].y +
+            data[i].y * data[i].y; // Update squared sum for current date
+        const mju = periodSum / period;
+        const stdev = Math.sqrt(squaredSum / period - mju * mju); // sigma = sqrt(E(X^2)-E(x)^2)
+        // Push current SMA
+        sma.push({
+            x: data[i].x,
+            y: periodSum / period
+        });
+        // Push current value of SMA + STDEV * 2
+        upperBand.push({
+            x: data[i].x,
+            y: periodSum / period + 2 * stdev
+        });
+        // Push current value of SMA - STDEV * 2
+        lowerBand.push({
+            x: data[i].x,
+            y: periodSum / period - 2 * stdev
+        });
+    }
+
+    return {
+        sma,
+        upperBand,
+        lowerBand
+    };
 });
 
 
@@ -34229,7 +34225,7 @@ __webpack_require__.r(__webpack_exports__);
     let averageLoss;
     const rsi = [];
 
-    if (data.length < period) return [];
+    if (data.length <= period) return null;
     for (let i = 1; i <= period; i++) {
         const diff = data[i].y - data[i - 1].y;
         const gain = diff >= 0 ? diff : 0;
