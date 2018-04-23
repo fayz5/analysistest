@@ -19,6 +19,7 @@ const config = {
         port: 8000,
         historyApiFallback: true
     },
+    devtool: 'cheap-source-map',
     module: {
         rules: [
             {

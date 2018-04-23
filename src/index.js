@@ -5,7 +5,7 @@ import getRSIData from './indicators/rsa';
 import updateChart from './utils/updateChart';
 import processData from './utils/processData';
 
-const PERIOD = 14;
+const PERIOD = 20;
 
 document.addEventListener('DOMContentLoaded', () => {
     getData('data/Oslo_STL.json').then((res) => {
@@ -36,7 +36,5 @@ document.addEventListener('DOMContentLoaded', () => {
         // Calculate and render RSI
         const rsi = getRSIData(data, PERIOD);
         renderChart('RSIABB', rsi, 'RSI ABB', 'aquamarine');
-
-        // updateChart(chart, rsi, 'RSI');
     });
 });
