@@ -1,6 +1,6 @@
 import getData from './utils/getData';
 import renderChart from './utils/renderChart';
-import getBollingerData from './indicators/boilinger';
+import getBollingerData from './indicators/bollinger';
 import getRSIData from './indicators/rsa';
 import updateChart from './utils/updateChart';
 import processData from './utils/processData';

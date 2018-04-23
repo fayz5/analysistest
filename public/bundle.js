@@ -34079,7 +34079,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_getData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/getData */ "./src/utils/getData.js");
 /* harmony import */ var _utils_renderChart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/renderChart */ "./src/utils/renderChart.js");
-/* harmony import */ var _indicators_boilinger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./indicators/boilinger */ "./src/indicators/boilinger.js");
+/* harmony import */ var _indicators_bollinger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./indicators/bollinger */ "./src/indicators/bollinger.js");
 /* harmony import */ var _indicators_rsa__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./indicators/rsa */ "./src/indicators/rsa.js");
 /* harmony import */ var _utils_updateChart__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/updateChart */ "./src/utils/updateChart.js");
 /* harmony import */ var _utils_processData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/processData */ "./src/utils/processData.js");
@@ -34097,7 +34097,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = Object(_utils_processData__WEBPACK_IMPORTED_MODULE_5__["default"])(res.data);
         const chart = Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('STL', data.slice(PERIOD - 1));
         // Calculate plot lines for Bollinger bands
-        const bollinger = Object(_indicators_boilinger__WEBPACK_IMPORTED_MODULE_2__["default"])(data, PERIOD);
+        const bollinger = Object(_indicators_bollinger__WEBPACK_IMPORTED_MODULE_2__["default"])(data, PERIOD);
 
         // Render bollinger bands and update chart
         Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.sma, `${PERIOD}-period SMA`);
@@ -34112,7 +34112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = Object(_utils_processData__WEBPACK_IMPORTED_MODULE_5__["default"])(res.data);
         const chart = Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('ABB', data.slice(PERIOD - 1));
         // Calculate plot lines for Bollinger bands
-        const bollinger = Object(_indicators_boilinger__WEBPACK_IMPORTED_MODULE_2__["default"])(data, PERIOD);
+        const bollinger = Object(_indicators_bollinger__WEBPACK_IMPORTED_MODULE_2__["default"])(data, PERIOD);
         // Render bollinger bands and update chart
         Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.sma, `${PERIOD}-period SMA`);
         Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'lime');
@@ -34127,9 +34127,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /***/ }),
 
-/***/ "./src/indicators/boilinger.js":
+/***/ "./src/indicators/bollinger.js":
 /*!*************************************!*\
-  !*** ./src/indicators/boilinger.js ***!
+  !*** ./src/indicators/bollinger.js ***!
   \*************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
