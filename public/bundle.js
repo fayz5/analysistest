@@ -34080,7 +34080,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_getData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/getData */ "./src/utils/getData.js");
 /* harmony import */ var _utils_renderChart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/renderChart */ "./src/utils/renderChart.js");
 /* harmony import */ var _indicators_bollinger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./indicators/bollinger */ "./src/indicators/bollinger.js");
-/* harmony import */ var _indicators_rsa__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./indicators/rsa */ "./src/indicators/rsa.js");
+/* harmony import */ var _indicators_rsi__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./indicators/rsi */ "./src/indicators/rsi.js");
 /* harmony import */ var _utils_updateChart__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/updateChart */ "./src/utils/updateChart.js");
 /* harmony import */ var _utils_processData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/processData */ "./src/utils/processData.js");
 
@@ -34105,7 +34105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'red');
 
         // Calculate and render RSI
-        const rsi = Object(_indicators_rsa__WEBPACK_IMPORTED_MODULE_3__["default"])(data);
+        const rsi = Object(_indicators_rsi__WEBPACK_IMPORTED_MODULE_3__["default"])(data);
         Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('RSISTL', rsi, 'RSI(14) STL', 'green');
     });
     Object(_utils_getData__WEBPACK_IMPORTED_MODULE_0__["default"])('data/Stockholm_ABB.json').then((res) => {
@@ -34119,7 +34119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'red');
 
         // Calculate and render RSI
-        const rsi = Object(_indicators_rsa__WEBPACK_IMPORTED_MODULE_3__["default"])(data);
+        const rsi = Object(_indicators_rsi__WEBPACK_IMPORTED_MODULE_3__["default"])(data);
         Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('RSIABB', rsi, 'RSI(14) ABB', 'green');
     });
 });
@@ -34150,19 +34150,19 @@ __webpack_require__.r(__webpack_exports__);
         squaredSum += data[i].y * data[i].y;
     }
 
+    // Standard deviation sigma = sqrt(E(X^2)-E(X)^2)
+    const sigma = Math.sqrt(
+        squaredSum / period - periodSum / period * (periodSum / period)
+    );
+
     /* Simple Moving Average(SMA) and Standard deviation(sigma) is available
-           only starting from date where there are enough samples to calculate it
-        */
+    only starting from date where there are enough samples to calculate it
+    */
 
     sma.push({
         x: data[period - 1].x,
         y: periodSum / period // E(X)
     });
-
-    // Standard deviation
-    const sigma = Math.sqrt(
-        squaredSum / period - periodSum / period * (periodSum / period) // sigma = sqrt(E(X^2)-E(X)^2)
-    );
 
     upperBand.push({
         x: data[period - 1].x,
@@ -34180,22 +34180,24 @@ __webpack_require__.r(__webpack_exports__);
             squaredSum -
             data[i - period].y * data[i - period].y +
             data[i].y * data[i].y; // Update squared sum for current date
-        const mju = periodSum / period;
-        const stdev = Math.sqrt(squaredSum / period - mju * mju); // sigma = sqrt(E(X^2)-E(x)^2)
+
+        const mju = periodSum / period; // current SMA
+        const stdev = Math.sqrt(squaredSum / period - mju * mju); // current Standard Deviation sigma = sqrt(E(X^2)-E(x)^2)
+
         // Push current SMA
         sma.push({
             x: data[i].x,
-            y: periodSum / period
+            y: mju
         });
         // Push current value of SMA + STDEV * 2
         upperBand.push({
             x: data[i].x,
-            y: periodSum / period + 2 * stdev
+            y: mju + 2 * stdev
         });
         // Push current value of SMA - STDEV * 2
         lowerBand.push({
             x: data[i].x,
-            y: periodSum / period - 2 * stdev
+            y: mju - 2 * stdev
         });
     }
 
@@ -34209,9 +34211,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/indicators/rsa.js":
+/***/ "./src/indicators/rsi.js":
 /*!*******************************!*\
-  !*** ./src/indicators/rsa.js ***!
+  !*** ./src/indicators/rsi.js ***!
   \*******************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
