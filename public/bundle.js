@@ -34101,12 +34101,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Render bollinger bands and update chart
         Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.sma, `${PERIOD}-period SMA`);
-        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'orange');
-        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'purple');
+        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'lime');
+        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'red');
 
         // Calculate and render RSI
-        const rsi = Object(_indicators_rsa__WEBPACK_IMPORTED_MODULE_3__["default"])(data, PERIOD);
-        Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('RSISTL', rsi, 'RSI STL', 'aquamarine');
+        const rsi = Object(_indicators_rsa__WEBPACK_IMPORTED_MODULE_3__["default"])(data);
+        Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('RSISTL', rsi, 'RSI(14) STL', 'green');
     });
     Object(_utils_getData__WEBPACK_IMPORTED_MODULE_0__["default"])('data/Stockholm_ABB.json').then((res) => {
         const data = Object(_utils_processData__WEBPACK_IMPORTED_MODULE_5__["default"])(res.data);
@@ -34115,12 +34115,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const bollinger = Object(_indicators_boilinger__WEBPACK_IMPORTED_MODULE_2__["default"])(data, PERIOD);
         // Render bollinger bands and update chart
         Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.sma, `${PERIOD}-period SMA`);
-        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'orange');
-        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'purple');
+        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.lowerBand, 'SMA - STDEV * 2', 'lime');
+        Object(_utils_updateChart__WEBPACK_IMPORTED_MODULE_4__["default"])(chart, bollinger.upperBand, 'SMA + STDEV * 2', 'red');
 
         // Calculate and render RSI
-        const rsi = Object(_indicators_rsa__WEBPACK_IMPORTED_MODULE_3__["default"])(data, PERIOD);
-        Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('RSIABB', rsi, 'RSI ABB', 'aquamarine');
+        const rsi = Object(_indicators_rsa__WEBPACK_IMPORTED_MODULE_3__["default"])(data);
+        Object(_utils_renderChart__WEBPACK_IMPORTED_MODULE_1__["default"])('RSIABB', rsi, 'RSI(14) ABB', 'green');
     });
 });
 
@@ -34219,13 +34219,14 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ((data = [], period = 14) => {
+    if (data.length <= period) return null;
+
     let sumGain = 0;
     let sumLoss = 0;
     let averageGain;
     let averageLoss;
     const rsi = [];
 
-    if (data.length <= period) return null;
     for (let i = 1; i <= period; i++) {
         const diff = data[i].y - data[i - 1].y;
         const gain = diff >= 0 ? diff : 0;
@@ -34246,7 +34247,7 @@ __webpack_require__.r(__webpack_exports__);
         const diff = data[i].y - data[i - 1].y;
         const gain = diff >= 0 ? diff : 0;
         const loss = diff < 0 ? 0 - diff : 0;
-
+        // average = (prevAverage * )
         averageGain = (averageGain * (period - 1) + gain) / period;
         averageLoss = (averageLoss * (period - 1) + loss) / period;
 
